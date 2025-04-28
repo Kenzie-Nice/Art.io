@@ -15,7 +15,7 @@ class Particle {
         this.y = y;
         this.size = Math.random() * 3 + 1; // Smaller size for glitter
         this.speedX = Math.random() * 0.5 - 0.25; // Slow down horizontal speed
-        this.speedY = Math.random() * 0.5 + 0.5; // Slightly faster vertical speed for fall
+        this.speedY = Math.random() * 0.5 + 0.2; // Slightly slower vertical speed for smooth fall
         this.color = `hsl(${Math.random() * 360}, 100%, 85%)`; // Random color for glitter effect
         this.opacity = Math.random() * 0.5 + 0.5; // Random opacity for a soft glow effect
         this.shouldFollowMouse = Math.random() < 0.3; // Only a few particles will follow the mouse
@@ -98,41 +98,29 @@ window.addEventListener("mousemove", (event) => {
     mouseY = event.y;
 });
 
-// --- Music button setup ---
-
-// Create a button for music
-const musicButton = document.createElement('button');
-musicButton.textContent = 'Play Music';
-musicButton.style.position = 'absolute';
-musicButton.style.top = '20px';
-musicButton.style.left = '20px';
-musicButton.style.padding = '10px 20px';
-musicButton.style.background = 'linear-gradient(45deg, #00f0ff, #ff00ff)';
-musicButton.style.color = 'white';
-musicButton.style.border = 'none';
-musicButton.style.borderRadius = '20px';
-musicButton.style.fontFamily = 'sans-serif';
-musicButton.style.fontSize = '16px';
-musicButton.style.cursor = 'pointer';
-musicButton.style.boxShadow = '0 0 10px #ff00ff, 0 0 20px #00f0ff';
-musicButton.style.transition = 'transform 0.2s';
-musicButton.addEventListener('mouseenter', () => musicButton.style.transform = 'scale(1.1)');
-musicButton.addEventListener('mouseleave', () => musicButton.style.transform = 'scale(1)');
-
-document.body.appendChild(musicButton);
-
-// Create the audio
+// Create an audio element for background music
 const audio = new Audio('603711__musicbymisterbates__emotional-spiritual-soundtrack-respect.mp3');
-audio.loop = true;
-audio.volume = 0.2;
+audio.loop = true; 
+audio.volume = 0.2; 
+audio.play(); 
 
-// Only start music when button is clicked
-musicButton.addEventListener('click', () => {
-    audio.play();
-    musicButton.style.display = 'none'; // Hide button after starting
+// Create the music button
+const button = document.createElement('button');
+button.innerHTML = "Click to Play Music";
+button.style.position = 'fixed';
+button.style.top = '20px';
+button.style.left = '20px';
+button.style.fontSize = '20px';
+button.style.padding = '10px 20px';
+document.body.appendChild(button);
+
+button.addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play();
+    } else {
+        audio.pause();
+    }
 });
-
-// --- End Music setup ---
 
 // Update and draw the particles every frame
 function animate() {
