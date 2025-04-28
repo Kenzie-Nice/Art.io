@@ -3,115 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art Final - Particles</title>
+    <title>Particle Animation</title>
     <style>
-        /* Cyan gradient background */
+        /* Add your CSS here */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: linear-gradient(to right, #00c6ff, #007BFF); /* cyan gradient */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
             overflow: hidden;
-        }
-
-        h1 {
-            font-size: 3rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Slight shadow for readability */
-            z-index: 1;
-        }
-
-        /* Particle class */
-        .particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background-color: white;
-            border-radius: 50%;
-            opacity: 0.8;
+            background: linear-gradient(to bottom, cyan, lightblue);
         }
     </style>
 </head>
 <body>
-    <h1>Hello, this is your basic page with a cyan blue gradient!</h1>
-    
-    <!-- JavaScript for particles -->
-    <script>
-        const numberOfParticles = 100;
-        const particles = [];
+    <h1>Hello, this is your basic page!</h1>
 
-        // Create particles
-        for (let i = 0; i < numberOfParticles; i++) {
-            let particle = document.createElement('div');
-            particle.classList.add('particle');
+    <!-- Include your JavaScript file -->
+    <script src="particles.js"></script>  <!-- Ensure this points to your actual JS file -->
 
-            // Set random initial position
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = Math.random() * window.innerHeight + 'px';
-
-            // Randomly decide if particle should follow mouse or not
-            particle.shouldFollowMouse = Math.random() > 0.5; // 50% chance
-
-            // Store the particle for later interaction
-            particles.push(particle);
-            document.body.appendChild(particle);
-        }
-
-        // Update particles every frame
-        function animateParticles() {
-            particles.forEach(particle => {
-                // Move each particle randomly if it is not following the mouse
-                if (!particle.shouldFollowMouse) {
-                    let x = parseFloat(particle.style.left);
-                    let y = parseFloat(particle.style.top);
-
-                    const speedX = (Math.random() - 0.5) * 2;
-                    const speedY = (Math.random() - 0.5) * 2;
-
-                    particle.style.left = x + speedX + 'px';
-                    particle.style.top = y + speedY + 'px';
-
-                    // Ensure particles stay within the window bounds
-                    if (x > window.innerWidth || x < 0) {
-                        particle.style.left = Math.random() * window.innerWidth + 'px';
-                    }
-
-                    if (y > window.innerHeight || y < 0) {
-                        particle.style.top = Math.random() * window.innerHeight + 'px';
-                    }
-                }
-            });
-
-            // Call the function again for the next frame
-            requestAnimationFrame(animateParticles);
-        }
-
-        // Start animating the particles
-        animateParticles();
-
-        // Mouse move event to track mouse position
-        document.addEventListener('mousemove', function(e) {
-            particles.forEach(particle => {
-                // Only move particles that are supposed to follow the mouse
-                if (particle.shouldFollowMouse) {
-                    const particleRect = particle.getBoundingClientRect();
-                    const particleX = particleRect.left + particleRect.width / 2;
-                    const particleY = particleRect.top + particleRect.height / 2;
-
-                    const deltaX = e.clientX - particleX;
-                    const deltaY = e.clientY - particleY;
-
-                    const speed = 0.05; // How fast the particles move towards the mouse
-                    particle.style.left = particleX + deltaX * speed + 'px';
-                    particle.style.top = particleY + deltaY * speed + 'px';
-                }
-            });
-        });
-    </script>
 </body>
 </html>
 
