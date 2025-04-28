@@ -12,47 +12,38 @@ class Particle {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 5 + 2; // Random size between 2 and 7
-        this.speedX = Math.random() * 2 - 1; // Random horizontal speed
-        this.speedY = Math.random() * 1 + 1; // Falling speed, controlled
-        this.color = this.randomColor(); // Random initial color
-    }
-
-    // Method to get a random color
-    randomColor() {
-        const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FFFF33', '#33FFF7']; // Array of colors
-        return colors[Math.floor(Math.random() * colors.length)];
+        this.size = Math.random() * 3 + 1; // Smaller size for glitter
+        this.speedX = Math.random() * 0.5 - 0.25; // Slow down horizontal speed
+        this.speedY = Math.random() * 0.5 + 0.5; // Slightly faster vertical speed for fall
+        this.color = `hsl(${Math.random() * 360}, 100%, 85%)`; // Random color for glitter effect
+        this.opacity = Math.random() * 0.5 + 0.5; // Random opacity for a soft glow effect
+        this.shouldFollowMouse = Math.random() < 0.3; // Only a few particles will follow the mouse
     }
 
     // Method to update particle position
     update() {
-        // Particle falls down with a slight horizontal drift
+        if (this.shouldFollowMouse) {
+            let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
+            let speed = 0.3;
+            this.x += Math.cos(angle) * speed;
+            this.y += Math.sin(angle) * speed;
+        }
         this.x += this.speedX;
         this.y += this.speedY;
-
-        // Change color over time by adjusting the particle's color after each frame
-        if (Math.random() < 0.01) { // 1% chance to change color per frame
-            this.color = this.randomColor(); // Change the color
-        }
-
-        // Reset particle position when it falls off the screen
-        if (this.y >= window.innerHeight) {
-            this.y = -this.size; // Reset position to top
-            this.x = Math.random() * window.innerWidth; // Randomize horizontal position
-        }
-
-        // Bounce off the sides of the screen
-        if (this.x <= 0 || this.x >= window.innerWidth) {
-            this.speedX *= -1; // Reverse horizontal speed when hitting window edges
-        }
+        
+        // Keep particles within bounds
+        if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
+        if (this.y >= window.innerHeight) this.y = 0; // Reset to top of the screen after reaching bottom
     }
 
-    // Method to draw the particle on the screen
+    // Method to draw the particle with a glittery effect
     draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity; // Add opacity for glowing effect
         ctx.fill();
+        ctx.globalAlpha = 1; // Reset alpha back to normal after drawing
     }
 }
 
@@ -65,15 +56,21 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Create an array of particles
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 200; i++) { // More particles for glitter effect
     particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
 
-// Mouse event listener to track mouse position (even if we're not using it now)
+// Mouse event listener to track mouse position
 window.addEventListener("mousemove", (event) => {
     mouseX = event.x;
     mouseY = event.y;
 });
+
+// Create an audio element for background music
+const audio = new Audio('your-music-file.mp3'); // Replace with the path to your music file
+audio.loop = true; // Make the music loop
+audio.volume = 0.2; // Set volume to a low level for background music
+audio.play(); // Start the music when the page loads
 
 // Update and draw the particles every frame
 function animate() {
