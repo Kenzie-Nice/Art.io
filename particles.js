@@ -37,9 +37,9 @@ class Particle {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Change color randomly over time (every 100 frames)
+        // Change color over time by adjusting the particle's color after each frame
         if (Math.random() < 0.01) { // 1% chance to change color per frame
-            this.color = this.randomColor();
+            this.color = this.randomColor(); // Change the color
         }
 
         if (this.x <= 0 || this.x >= window.innerWidth) {
@@ -89,4 +89,3 @@ function animate() {
 }
 
 animate(); // Start the animation
-
