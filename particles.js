@@ -108,24 +108,20 @@ audio.play();
 const button = document.createElement('button');
 button.innerHTML = "Click to Play Music";
 button.style.position = 'fixed';
-button.style.top = '30px';  // Adjust this value to move it lower
-button.style.left = '10px'; // Keep this to the left side
-button.style.fontSize = '20px';
-button.style.padding = '10px 20px';
+button.style.top = '10px';
+button.style.left = '10px';
+button.style.padding = '10px';
+button.style.fontSize = '16px';
 document.body.appendChild(button);
 
-// Hide or overlap the small button by positioning it at the same location
-const smallButton = document.getElementById('smallMusicButton'); // Assuming you still have a small button with this ID
-if (smallButton) {
-    smallButton.style.display = 'none'; // Hide it
-}
-
-// Audio play/pause functionality
+// Toggle audio playback on button click
 button.addEventListener('click', () => {
     if (audio.paused) {
         audio.play();
+        button.innerHTML = "Click to Pause Music";
     } else {
         audio.pause();
+        button.innerHTML = "Click to Play Music";
     }
 });
 
