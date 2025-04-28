@@ -67,7 +67,7 @@ window.addEventListener("mousemove", (event) => {
 });
 
 // Create an audio element for background music
-const audio = new Audio('your-music-file.mp3'); // Replace with the path to your music file
+const audio = new Audio('603711__musicbymisterbates__emotional-spiritual-soundtrack-respect.mp3'); // Replace with the path to your music file
 audio.loop = true; // Make the music loop
 audio.volume = 0.2; // Set volume to a low level for background music
 audio.play(); // Start the music when the page loads
