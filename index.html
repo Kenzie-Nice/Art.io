@@ -53,6 +53,9 @@
             particle.style.left = Math.random() * window.innerWidth + 'px';
             particle.style.top = Math.random() * window.innerHeight + 'px';
 
+            // Randomly decide if particle should follow mouse or not
+            particle.shouldFollowMouse = Math.random() > 0.5; // 50% chance
+
             // Store the particle for later interaction
             particles.push(particle);
             document.body.appendChild(particle);
@@ -61,24 +64,25 @@
         // Update particles every frame
         function animateParticles() {
             particles.forEach(particle => {
-                // Move each particle randomly to create a floating effect
-                let x = parseFloat(particle.style.left);
-                let y = parseFloat(particle.style.top);
+                // Move each particle randomly if it is not following the mouse
+                if (!particle.shouldFollowMouse) {
+                    let x = parseFloat(particle.style.left);
+                    let y = parseFloat(particle.style.top);
 
-                // Add slight random movement for each particle
-                const speedX = (Math.random() - 0.5) * 2;
-                const speedY = (Math.random() - 0.5) * 2;
+                    const speedX = (Math.random() - 0.5) * 2;
+                    const speedY = (Math.random() - 0.5) * 2;
 
-                particle.style.left = x + speedX + 'px';
-                particle.style.top = y + speedY + 'px';
+                    particle.style.left = x + speedX + 'px';
+                    particle.style.top = y + speedY + 'px';
 
-                // Ensure particles stay within the window bounds
-                if (x > window.innerWidth || x < 0) {
-                    particle.style.left = Math.random() * window.innerWidth + 'px';
-                }
+                    // Ensure particles stay within the window bounds
+                    if (x > window.innerWidth || x < 0) {
+                        particle.style.left = Math.random() * window.innerWidth + 'px';
+                    }
 
-                if (y > window.innerHeight || y < 0) {
-                    particle.style.top = Math.random() * window.innerHeight + 'px';
+                    if (y > window.innerHeight || y < 0) {
+                        particle.style.top = Math.random() * window.innerHeight + 'px';
+                    }
                 }
             });
 
@@ -88,23 +92,23 @@
 
         // Start animating the particles
         animateParticles();
-        
+
         // Mouse move event to track mouse position
         document.addEventListener('mousemove', function(e) {
             particles.forEach(particle => {
-                // Get current particle position
-                const particleRect = particle.getBoundingClientRect();
-                const particleX = particleRect.left + particleRect.width / 2;
-                const particleY = particleRect.top + particleRect.height / 2;
+                // Only move particles that are supposed to follow the mouse
+                if (particle.shouldFollowMouse) {
+                    const particleRect = particle.getBoundingClientRect();
+                    const particleX = particleRect.left + particleRect.width / 2;
+                    const particleY = particleRect.top + particleRect.height / 2;
 
-                // Calculate the direction towards the mouse
-                const deltaX = e.clientX - particleX;
-                const deltaY = e.clientY - particleY;
+                    const deltaX = e.clientX - particleX;
+                    const deltaY = e.clientY - particleY;
 
-                // Move particle slightly towards the mouse
-                const speed = 0.05; // How fast the particles move towards the mouse
-                particle.style.left = particleX + deltaX * speed + 'px';
-                particle.style.top = particleY + deltaY * speed + 'px';
+                    const speed = 0.05; // How fast the particles move towards the mouse
+                    particle.style.left = particleX + deltaX * speed + 'px';
+                    particle.style.top = particleY + deltaY * speed + 'px';
+                }
             });
         });
     </script>
