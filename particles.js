@@ -70,7 +70,11 @@ window.addEventListener("mousemove", (event) => {
 const audio = new Audio('603711__musicbymisterbates__emotional-spiritual-soundtrack-respect.mp3'); // Replace with the path to your music file
 audio.loop = true; // Make the music loop
 audio.volume = 0.2; // Set volume to a low level for background music
-audio.play(); // Start the music when the page loads
+
+// Play the audio when the user clicks anywhere on the page
+document.body.addEventListener('click', function() {
+    audio.play();
+});
 
 // Update and draw the particles every frame
 function animate() {
