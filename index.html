@@ -41,10 +41,10 @@
     
     <!-- JavaScript for particles -->
     <script>
-        // Number of particles to create
         const numberOfParticles = 100;
+        const particles = [];
 
-        // Create particles and animate them
+        // Create particles
         for (let i = 0; i < numberOfParticles; i++) {
             let particle = document.createElement('div');
             particle.classList.add('particle');
@@ -56,35 +56,28 @@
             // Add particle to the body
             document.body.appendChild(particle);
 
-            // Animate particle with random movement
-            animateParticle(particle);
+            // Store particle for later interaction
+            particles.push(particle);
         }
 
-        // Particle animation function
-        function animateParticle(particle) {
-            let directionX = Math.random() * 2 - 1; // Random X direction
-            let directionY = Math.random() * 2 - 1; // Random Y direction
+        // Mouse move event to track mouse position
+        document.addEventListener('mousemove', function(e) {
+            particles.forEach(particle => {
+                // Get current particle position
+                const particleRect = particle.getBoundingClientRect();
+                const particleX = particleRect.left + particleRect.width / 2;
+                const particleY = particleRect.top + particleRect.height / 2;
 
-            function move() {
-                // Get the current position
-                let x = parseFloat(particle.style.left);
-                let y = parseFloat(particle.style.top);
+                // Calculate the direction towards the mouse
+                const deltaX = e.clientX - particleX;
+                const deltaY = e.clientY - particleY;
 
-                // Move the particle
-                particle.style.left = x + directionX + 'px';
-                particle.style.top = y + directionY + 'px';
-
-                // Reset particle if it goes out of bounds
-                if (x > window.innerWidth || x < 0 || y > window.innerHeight || y < 0) {
-                    particle.style.left = Math.random() * window.innerWidth + 'px';
-                    particle.style.top = Math.random() * window.innerHeight + 'px';
-                }
-
-                requestAnimationFrame(move); // Continue the animation
-            }
-
-            move();
-        }
+                // Move particle slightly towards the mouse
+                const speed = 0.1; // How fast the particles move towards the mouse
+                particle.style.left = particleX + deltaX * speed + 'px';
+                particle.style.top = particleY + deltaY * speed + 'px';
+            });
+        });
     </script>
 </body>
 </html>
