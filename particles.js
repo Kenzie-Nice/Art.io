@@ -108,8 +108,9 @@ audio.play();
 const button = document.createElement('button');
 button.innerHTML = "Click to Play Music";
 button.style.position = 'fixed';
-button.style.top = '10px';
-button.style.left = '10px';
+button.style.bottom = '20px'; // Move the button to the bottom
+button.style.left = '50%'; // Center the button horizontally
+button.style.transform = 'translateX(-50%)'; // Adjust for centering
 button.style.padding = '10px';
 button.style.fontSize = '16px';
 document.body.appendChild(button);
