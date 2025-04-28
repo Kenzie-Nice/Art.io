@@ -1,78 +1,152 @@
-// === NEW CODE TO ADD: Falling Poem Lines ===
+// particles.js
 
-// Poem lines from Rilke
-const poemLines = [
-    "I live my life in widening circles",
-    "that reach out across the world.",
-    "I may not complete this last one,",
-    "but I give myself to it.",
-    "I circle around God, around the primordial tower.",
-    "I've been circling for thousands of years",
-    "and I still don't know: am I a falcon,",
-    "a storm, or a great song?"
-];
+// Create an array to store the particles
+let particles = [];
+let neonParticle;
 
-// Poem particle class
-class PoemParticle {
-    constructor(text) {
-        this.text = text;
-        this.x = Math.random() * canvas.width;
-        this.y = -50; // Start above the screen
-        this.speedY = Math.random() * 0.5 + 0.2; // Slow fall
-        this.opacity = 0;
-        this.fadeInSpeed = 0.01;
-        this.fontSize = 20;
+// Store the mouse position
+let mouseX = 0;
+let mouseY = 0;
+
+// Create a particle class
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 3 + 1; // Smaller size for glitter
+        this.speedX = Math.random() * 0.5 - 0.25; // Slow down horizontal speed
+        this.speedY = Math.random() * 0.5 + 0.5; // Slightly faster vertical speed for fall
+        this.color = `hsl(${Math.random() * 360}, 100%, 85%)`; // Random color for glitter effect
+        this.opacity = Math.random() * 0.5 + 0.5; // Random opacity for a soft glow effect
+        this.shouldFollowMouse = Math.random() < 0.3; // Only a few particles will follow the mouse
+    }
+
+    // Method to update particle position
+    update() {
+        if (this.shouldFollowMouse) {
+            let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
+            let speed = 0.3;
+            this.x += Math.cos(angle) * speed;
+            this.y += Math.sin(angle) * speed;
+        }
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Keep particles within bounds
+        if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
+        if (this.y >= window.innerHeight) this.y = 0; // Reset to top of the screen after reaching bottom
+    }
+
+    // Method to draw the particle with a glittery effect
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity; // Add opacity for glowing effect
+        ctx.fill();
+        ctx.globalAlpha = 1; // Reset alpha back to normal after drawing
+    }
+}
+
+// Create a NeonParticle class for the neon particle moving around
+class NeonParticle {
+    constructor() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        this.size = 10; // Larger size for the neon effect
+        this.speedX = Math.random() * 2 - 1; // Random speed for neon particle
+        this.speedY = Math.random() * 2 - 1; // Random vertical speed for neon particle
+        this.color = 'hsl(210, 100%, 50%)'; // Neon blue color
     }
 
     update() {
+        this.x += this.speedX;
         this.y += this.speedY;
-        if (this.opacity < 1) {
-            this.opacity += this.fadeInSpeed;
-        }
+
+        // Keep neon particle within bounds and make it bounce
+        if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
+        if (this.y <= 0 || this.y >= window.innerHeight) this.speedY *= -1;
     }
 
     draw(ctx) {
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = "#e0f7ff"; // Very light blue/white glow
-        ctx.font = `${this.fontSize}px serif`;
-        ctx.fillText(this.text, this.x, this.y);
-        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
     }
 }
 
-let activePoemParticles = [];
-let poemIndex = 0;
+// Initialize the canvas and start animation
+const canvas = document.createElement("canvas");
+document.body.appendChild(canvas);
+const ctx = canvas.getContext("2d");
 
-function spawnPoemParticle() {
-    if (poemIndex < poemLines.length) {
-        activePoemParticles.push(new PoemParticle(poemLines[poemIndex]));
-        poemIndex++;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-        // Random delay between spawning next line
-        setTimeout(spawnPoemParticle, Math.random() * 2000 + 1000); // 1-3 seconds delay
-    }
+// Create an array of particles
+for (let i = 0; i < 200; i++) { // More particles for glitter effect
+    particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
 
-// Start spawning the poem lines after a short pause
-setTimeout(spawnPoemParticle, 2000);
+// Create the neon particle
+neonParticle = new NeonParticle();
 
+// Mouse event listener to track mouse position
+window.addEventListener("mousemove", (event) => {
+    mouseX = event.x;
+    mouseY = event.y;
+});
 
-// === UPDATE YOUR animate() FUNCTION to draw them ===
+// --- Music button setup ---
+
+// Create a button for music
+const musicButton = document.createElement('button');
+musicButton.textContent = 'Play Music';
+musicButton.style.position = 'absolute';
+musicButton.style.top = '20px';
+musicButton.style.left = '20px';
+musicButton.style.padding = '10px 20px';
+musicButton.style.background = 'linear-gradient(45deg, #00f0ff, #ff00ff)';
+musicButton.style.color = 'white';
+musicButton.style.border = 'none';
+musicButton.style.borderRadius = '20px';
+musicButton.style.fontFamily = 'sans-serif';
+musicButton.style.fontSize = '16px';
+musicButton.style.cursor = 'pointer';
+musicButton.style.boxShadow = '0 0 10px #ff00ff, 0 0 20px #00f0ff';
+musicButton.style.transition = 'transform 0.2s';
+musicButton.addEventListener('mouseenter', () => musicButton.style.transform = 'scale(1.1)');
+musicButton.addEventListener('mouseleave', () => musicButton.style.transform = 'scale(1)');
+
+document.body.appendChild(musicButton);
+
+// Create the audio
+const audio = new Audio('603711__musicbymisterbates__emotional-spiritual-soundtrack-respect.mp3');
+audio.loop = true;
+audio.volume = 0.2;
+
+// Only start music when button is clicked
+musicButton.addEventListener('click', () => {
+    audio.play();
+    musicButton.style.display = 'none'; // Hide button after starting
+});
+
+// --- End Music setup ---
+
+// Update and draw the particles every frame
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-    
     particles.forEach(particle => {
         particle.update();
         particle.draw(ctx);
     });
 
-    brightParticle.update();
-    brightParticle.draw(ctx);
-
-    activePoemParticles.forEach(poem => {
-        poem.update();
-        poem.draw(ctx);
-    });
+    // Update and draw the neon particle
+    neonParticle.update();
+    neonParticle.draw(ctx);
 
     requestAnimationFrame(animate); // Keep animating
 }
+
+animate(); // Start the animation
