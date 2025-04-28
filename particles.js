@@ -8,23 +8,19 @@ class Particle {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 5 + 2; // Random size between 2 and 7
-        this.speedX = Math.random() * 2 - 1; // Random horizontal speed
-        this.speedY = Math.random() * 2 - 1; // Random vertical speed
+        this.size = Math.random() * 2 + 1; // Smaller size, random between 1 and 3
+        this.speedY = Math.random() * 1 + 0.2; // Random falling speed between 0.2 and 1.2
         this.color = "white"; // Default particle color
     }
 
     // Method to update particle position
     update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.y += this.speedY; // Let the particle fall
 
-        // Keep particles within the window bounds
-        if (this.x <= 0 || this.x >= window.innerWidth) {
-            this.speedX *= -1; // Reverse horizontal speed when hitting window edges
-        }
-        if (this.y <= 0 || this.y >= window.innerHeight) {
-            this.speedY *= -1; // Reverse vertical speed when hitting window edges
+        // Reset the particle when it reaches the bottom
+        if (this.y >= window.innerHeight) {
+            this.y = -this.size; // Restart at the top
+            this.x = Math.random() * window.innerWidth; // Random horizontal position
         }
     }
 
@@ -46,7 +42,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Create an array of particles
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 150; i++) { // Increased particle count for a fuller effect
     particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
 
