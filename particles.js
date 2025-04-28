@@ -3,24 +3,50 @@
 // Create an array to store the particles
 let particles = [];
 
+// Store the mouse position
+let mouseX = 0;
+let mouseY = 0;
+
 // Create a particle class
 class Particle {
-    constructor(x) {
-        this.x = x; // Fixed horizontal position for all particles
-        this.y = Math.random() * -100; // Start above the screen
-        this.size = Math.random() * 2 + 1; // Random size between 1 and 3
-        this.speedY = Math.random() * 0.5 + 0.5; // Speed of falling
-        this.color = "white"; // Particle color
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 5 + 2; // Random size between 2 and 7
+        this.speedX = Math.random() * 2 - 1; // Random horizontal speed
+        this.speedY = Math.random() * 2 - 1; // Random vertical speed
+        this.color = this.randomColor(); // Random initial color
+        this.shouldFollowMouse = Math.random() < 0.5; // 50% chance for each particle to follow the mouse
+    }
+
+    // Method to get a random color
+    randomColor() {
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FFFF33', '#33FFF7']; // Array of colors
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
     // Method to update particle position
     update() {
-        this.y += this.speedY; // Move particle downward
+        if (this.shouldFollowMouse) {
+            // Follow mouse position
+            let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
+            let speed = 0.5; // Adjust this value to control how fast particles follow the mouse
+            this.x += Math.cos(angle) * speed;
+            this.y += Math.sin(angle) * speed;
+        }
+        this.x += this.speedX;
+        this.y += this.speedY;
 
-        // Reset particle when it reaches the bottom
-        if (this.y >= window.innerHeight) {
-            this.y = -this.size; // Reset position to the top
-            this.x = Math.random() * window.innerWidth; // Random horizontal position
+        // Change color randomly over time (every 100 frames)
+        if (Math.random() < 0.01) { // 1% chance to change color per frame
+            this.color = this.randomColor();
+        }
+
+        if (this.x <= 0 || this.x >= window.innerWidth) {
+            this.speedX *= -1; // Reverse horizontal speed when hitting window edges
+        }
+        if (this.y <= 0 || this.y >= window.innerHeight) {
+            this.speedY *= -1; // Reverse vertical speed when hitting window edges
         }
     }
 
@@ -41,10 +67,16 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Create an array of particles that fall from a consistent starting point
-for (let i = 0; i < 150; i++) { // Number of particles
-    particles.push(new Particle(Math.random() * window.innerWidth)); // Random horizontal starting point
+// Create an array of particles
+for (let i = 0; i < 100; i++) {
+    particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
+
+// Mouse event listener to track mouse position
+window.addEventListener("mousemove", (event) => {
+    mouseX = event.x;
+    mouseY = event.y;
+});
 
 // Update and draw the particles every frame
 function animate() {
@@ -56,5 +88,5 @@ function animate() {
     requestAnimationFrame(animate); // Keep animating
 }
 
-// Start animation
-animate();
+animate(); // Start the animation
+
