@@ -1,167 +1,140 @@
-<!-- HTML structure for the page -->
+// particles.js
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snow and Art</title>
-    <style>
-        /* Button styling */
-        #musicButton {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 20px 40px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+// Create an array to store the particles
+let particles = [];
+let neonParticle;
+
+// Store the mouse position
+let mouseX = 0;
+let mouseY = 0;
+
+// Create a particle class
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 3 + 1; // Smaller size for glitter
+        this.speedX = Math.random() * 0.5 - 0.25; // Slow down horizontal speed
+        this.speedY = Math.random() * 0.5 + 0.2; // Slightly slower vertical speed for smooth fall
+        this.color = `hsl(${Math.random() * 360}, 100%, 85%)`; // Random color for glitter effect
+        this.opacity = Math.random() * 0.5 + 0.5; // Random opacity for a soft glow effect
+        this.shouldFollowMouse = Math.random() < 0.3; // Only a few particles will follow the mouse
+    }
+
+    // Method to update particle position
+    update() {
+        if (this.shouldFollowMouse) {
+            let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
+            let speed = 0.3;
+            this.x += Math.cos(angle) * speed;
+            this.y += Math.sin(angle) * speed;
         }
-        #musicButton:hover {
-            background-color: #0D8BF2;
-        }
-    </style>
-</head>
-<body>
-    <button id="musicButton">Play Music</button>
+        this.x += this.speedX;
+        this.y += this.speedY;
 
-    <script>
-        // particles.js
+        // Keep particles within bounds
+        if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
+        if (this.y >= window.innerHeight) this.y = 0; // Reset to top of the screen after reaching bottom
+    }
 
-        // Create an array to store the particles
-        let particles = [];
-        let neonParticle;
+    // Method to draw the particle with a glittery effect
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity; // Add opacity for glowing effect
+        ctx.fill();
+        ctx.globalAlpha = 1; // Reset alpha back to normal after drawing
+    }
+}
 
-        // Store the mouse position
-        let mouseX = 0;
-        let mouseY = 0;
+// Create a NeonParticle class for the neon particle moving around
+class NeonParticle {
+    constructor() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        this.size = 10; // Larger size for the neon effect
+        this.speedX = Math.random() * 2 - 1; // Random speed for neon particle
+        this.speedY = Math.random() * 2 - 1; // Random vertical speed for neon particle
+        this.color = 'hsl(210, 100%, 50%)'; // Neon blue color
+    }
 
-        // Create a particle class
-        class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 3 + 1; // Smaller size for glitter
-                this.speedX = Math.random() * 0.5 - 0.25; // Slow down horizontal speed
-                this.speedY = Math.random() * 0.5 + 0.5; // Slightly faster vertical speed for fall
-                this.color = `hsl(${Math.random() * 360}, 100%, 85%)`; // Random color for glitter effect
-                this.opacity = Math.random() * 0.5 + 0.5; // Random opacity for a soft glow effect
-                this.shouldFollowMouse = Math.random() < 0.3; // Only a few particles will follow the mouse
-            }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
 
-            // Method to update particle position
-            update() {
-                if (this.shouldFollowMouse) {
-                    let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
-                    let speed = 0.3;
-                    this.x += Math.cos(angle) * speed;
-                    this.y += Math.sin(angle) * speed;
-                }
-                this.x += this.speedX;
-                this.y += this.speedY;
+        // Keep neon particle within bounds and make it bounce
+        if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
+        if (this.y <= 0 || this.y >= window.innerHeight) this.speedY *= -1;
+    }
 
-                // Keep particles within bounds
-                if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
-                if (this.y >= window.innerHeight) this.y = 0; // Reset to top of the screen after reaching bottom
-            }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
 
-            // Method to draw the particle with a glittery effect
-            draw(ctx) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.opacity; // Add opacity for glowing effect
-                ctx.fill();
-                ctx.globalAlpha = 1; // Reset alpha back to normal after drawing
-            }
-        }
+// Initialize the canvas and start animation
+const canvas = document.createElement("canvas");
+document.body.appendChild(canvas);
+const ctx = canvas.getContext("2d");
 
-        // Create a NeonParticle class for the neon particle moving around
-        class NeonParticle {
-            constructor() {
-                this.x = Math.random() * window.innerWidth;
-                this.y = Math.random() * window.innerHeight;
-                this.size = 10; // Larger size for the neon effect
-                this.speedX = Math.random() * 2 - 1; // Random speed for neon particle
-                this.speedY = Math.random() * 2 - 1; // Random vertical speed for neon particle
-                this.color = 'hsl(210, 100%, 50%)'; // Neon blue color
-            }
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+// Create an array of particles
+for (let i = 0; i < 200; i++) { // More particles for glitter effect
+    particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
+}
 
-                // Keep neon particle within bounds and make it bounce
-                if (this.x <= 0 || this.x >= window.innerWidth) this.speedX *= -1;
-                if (this.y <= 0 || this.y >= window.innerHeight) this.speedY *= -1;
-            }
+// Create the neon particle
+neonParticle = new NeonParticle();
 
-            draw(ctx) {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-        }
+// Mouse event listener to track mouse position
+window.addEventListener("mousemove", (event) => {
+    mouseX = event.x;
+    mouseY = event.y;
+});
 
-        // Initialize the canvas and start animation
-        const canvas = document.createElement("canvas");
-        document.body.appendChild(canvas);
-        const ctx = canvas.getContext("2d");
+// Create an audio element for background music
+const audio = new Audio('603711__musicbymisterbates__emotional-spiritual-soundtrack-respect.mp3');
+audio.loop = true; 
+audio.volume = 0.2; 
+audio.play(); 
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+// Create the music button
+const button = document.createElement('button');
+button.innerHTML = "Click to Play Music";
+button.style.position = 'fixed';
+button.style.top = '20px';
+button.style.left = '20px';
+button.style.fontSize = '20px';
+button.style.padding = '10px 20px';
+document.body.appendChild(button);
 
-        // Create an array of particles
-        for (let i = 0; i < 200; i++) { // More particles for glitter effect
-            particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
-        }
-
-        // Create the neon particle
-        neonParticle = new NeonParticle();
-
-        // Mouse event listener to track mouse position
-        window.addEventListener("mousemove", (event) => {
-            mouseX = event.x;
-            mouseY = event.y;
-        });
-
-        // Create an audio element for background music
-        const audio = new Audio('603711__musicbymisterbates__emotional-spiritual-soundtrack-respect.mp3');
-        audio.loop = true;
-        audio.volume = 0.2;
+button.addEventListener('click', () => {
+    if (audio.paused) {
         audio.play();
+    } else {
+        audio.pause();
+    }
+});
 
-        // Button to toggle music
-        const musicButton = document.getElementById('musicButton');
-        musicButton.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
-        });
+// Update and draw the particles every frame
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw(ctx);
+    });
 
-        // Update and draw the particles every frame
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw(ctx);
-            });
+    // Update and draw the neon particle
+    neonParticle.update();
+    neonParticle.draw(ctx);
 
-            // Update and draw the neon particle
-            neonParticle.update();
-            neonParticle.draw(ctx);
+    requestAnimationFrame(animate); // Keep animating
+}
 
-            requestAnimationFrame(animate); // Keep animating
-        }
-
-        animate(); // Start the animation
-    </script>
-</body>
-</html>
+animate(); // Start the animation
