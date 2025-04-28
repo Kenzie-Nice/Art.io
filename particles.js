@@ -5,21 +5,21 @@ let particles = [];
 
 // Create a particle class
 class Particle {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+    constructor(x) {
+        this.x = x; // Fixed horizontal position for all particles
+        this.y = Math.random() * -100; // Start above the screen
         this.size = Math.random() * 2 + 1; // Random size between 1 and 3
-        this.speedY = Math.random() * 0.5 + 0.5; // Random speed for falling particles
+        this.speedY = Math.random() * 0.5 + 0.5; // Speed of falling
         this.color = "white"; // Particle color
     }
 
     // Method to update particle position
     update() {
-        this.y += this.speedY; // Particle falls down
+        this.y += this.speedY; // Move particle downward
 
-        // Reset the particle when it reaches the bottom
+        // Reset particle when it reaches the bottom
         if (this.y >= window.innerHeight) {
-            this.y = -this.size; // Restart at the top
+            this.y = -this.size; // Reset position to the top
             this.x = Math.random() * window.innerWidth; // Random horizontal position
         }
     }
@@ -41,9 +41,9 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Create an array of particles
-for (let i = 0; i < 150; i++) { // 150 particles for a fuller effect
-    particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
+// Create an array of particles that fall from a consistent starting point
+for (let i = 0; i < 150; i++) { // Number of particles
+    particles.push(new Particle(Math.random() * window.innerWidth)); // Random horizontal starting point
 }
 
 // Update and draw the particles every frame
