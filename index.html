@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Page</title>
+    <title>Art Final - Particles</title>
     <style>
-        /* Apply a smooth cyan blue gradient background */
+        /* Cyan gradient background */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -16,14 +16,75 @@
             justify-content: center;
             align-items: center;
             color: white;
+            overflow: hidden;
         }
+
         h1 {
             font-size: 3rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Slight shadow for readability */
+            z-index: 1;
+        }
+
+        /* Particle class */
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
     <h1>Hello, this is your basic page with a cyan blue gradient!</h1>
+    
+    <!-- JavaScript for particles -->
+    <script>
+        // Number of particles to create
+        const numberOfParticles = 100;
+
+        // Create particles and animate them
+        for (let i = 0; i < numberOfParticles; i++) {
+            let particle = document.createElement('div');
+            particle.classList.add('particle');
+
+            // Set random position
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = Math.random() * window.innerHeight + 'px';
+
+            // Add particle to the body
+            document.body.appendChild(particle);
+
+            // Animate particle with random movement
+            animateParticle(particle);
+        }
+
+        // Particle animation function
+        function animateParticle(particle) {
+            let directionX = Math.random() * 2 - 1; // Random X direction
+            let directionY = Math.random() * 2 - 1; // Random Y direction
+
+            function move() {
+                // Get the current position
+                let x = parseFloat(particle.style.left);
+                let y = parseFloat(particle.style.top);
+
+                // Move the particle
+                particle.style.left = x + directionX + 'px';
+                particle.style.top = y + directionY + 'px';
+
+                // Reset particle if it goes out of bounds
+                if (x > window.innerWidth || x < 0 || y > window.innerHeight || y < 0) {
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = Math.random() * window.innerHeight + 'px';
+                }
+
+                requestAnimationFrame(move); // Continue the animation
+            }
+
+            move();
+        }
+    </script>
 </body>
 </html>
