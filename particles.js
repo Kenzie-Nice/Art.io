@@ -1,5 +1,3 @@
-// particles.js
-
 // Create an array to store the particles
 let particles = [];
 
@@ -24,12 +22,13 @@ class Particle {
         if (this.shouldFollowMouse) {
             // Follow mouse position
             let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
-            let speed = 0.5; // Adjust this value to control how fast particles follow the mouse
+            let speed = 0.1; // Adjust this value to control how fast particles follow the mouse
             this.x += Math.cos(angle) * speed;
             this.y += Math.sin(angle) * speed;
         }
         this.x += this.speedX;
         this.y += this.speedY;
+
         if (this.x <= 0 || this.x >= window.innerWidth) {
             this.speedX *= -1; // Reverse horizontal speed when hitting window edges
         }
