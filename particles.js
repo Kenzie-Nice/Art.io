@@ -9,7 +9,7 @@ class Particle {
         this.x = x;
         this.y = y;
         this.size = Math.random() * 2 + 1; // Random size between 1 and 3
-        this.speedY = Math.random() * 1 + 0.2; // Random speed between 0.2 and 1.2
+        this.speedY = Math.random() * 0.5 + 0.5; // Random speed for falling particles
         this.color = "white"; // Particle color
     }
 
@@ -41,16 +41,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Log canvas size for debugging
-console.log("Canvas dimensions:", canvas.width, canvas.height);
-
 // Create an array of particles
 for (let i = 0; i < 150; i++) { // 150 particles for a fuller effect
     particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
-
-// Log particles array size for debugging
-console.log("Particles created:", particles.length);
 
 // Update and draw the particles every frame
 function animate() {
