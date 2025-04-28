@@ -3,6 +3,10 @@
 // Create an array to store the particles
 let particles = [];
 
+// Store the mouse position
+let mouseX = 0;
+let mouseY = 0;
+
 // Create a particle class
 class Particle {
     constructor(x, y) {
@@ -18,7 +22,11 @@ class Particle {
     // Method to update particle position
     update() {
         if (this.shouldFollowMouse) {
-            // Add your smooth mouse-following logic here from previous response
+            // Follow mouse position
+            let angle = Math.atan2(mouseY - this.y, mouseX - this.x);
+            let speed = 0.5; // Adjust this value to control how fast particles follow the mouse
+            this.x += Math.cos(angle) * speed;
+            this.y += Math.sin(angle) * speed;
         }
         this.x += this.speedX;
         this.y += this.speedY;
@@ -51,6 +59,12 @@ canvas.height = window.innerHeight;
 for (let i = 0; i < 100; i++) {
     particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
+
+// Mouse event listener to track mouse position
+window.addEventListener("mousemove", (event) => {
+    mouseX = event.x;
+    mouseY = event.y;
+});
 
 // Update and draw the particles every frame
 function animate() {
