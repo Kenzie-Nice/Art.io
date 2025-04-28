@@ -5,21 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Particle Animation</title>
     <style>
-        /* Add your CSS here */
         body {
-    margin: 0;
-    overflow: hidden;
-    background: linear-gradient(to bottom, #00FFFF, #0000FF); /* Cyan to deep blue */
-}
-
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #00FFFF, #0000FF); /* Cyan to deep blue */
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Ensure the canvas stays behind the content */
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
     <h1>Hello, this is your basic page!</h1>
 
-    <!-- Include your JavaScript file -->
-    <script src="particles.js"></script>  <!-- Ensure this points to your actual JS file -->
-
+    <!-- Link to your JavaScript -->
+    <script src="particles.js"></script>
 </body>
 </html>
-
