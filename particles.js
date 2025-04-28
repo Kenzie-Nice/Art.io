@@ -8,14 +8,14 @@ class Particle {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 2 + 1; // Smaller size, random between 1 and 3
-        this.speedY = Math.random() * 1 + 0.2; // Random falling speed between 0.2 and 1.2
-        this.color = "white"; // Default particle color
+        this.size = Math.random() * 2 + 1; // Random size between 1 and 3
+        this.speedY = Math.random() * 1 + 0.2; // Random speed between 0.2 and 1.2
+        this.color = "white"; // Particle color
     }
 
     // Method to update particle position
     update() {
-        this.y += this.speedY; // Let the particle fall
+        this.y += this.speedY; // Particle falls down
 
         // Reset the particle when it reaches the bottom
         if (this.y >= window.innerHeight) {
@@ -41,10 +41,16 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Log canvas size for debugging
+console.log("Canvas dimensions:", canvas.width, canvas.height);
+
 // Create an array of particles
-for (let i = 0; i < 150; i++) { // Increased particle count for a fuller effect
+for (let i = 0; i < 150; i++) { // 150 particles for a fuller effect
     particles.push(new Particle(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
 }
+
+// Log particles array size for debugging
+console.log("Particles created:", particles.length);
 
 // Update and draw the particles every frame
 function animate() {
@@ -56,4 +62,5 @@ function animate() {
     requestAnimationFrame(animate); // Keep animating
 }
 
-animate(); // Start the animation
+// Start animation
+animate();
