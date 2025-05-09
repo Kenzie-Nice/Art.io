@@ -108,33 +108,35 @@ audio.play();
 const button = document.createElement('button');
 button.innerHTML = "Click to Play Music";
 button.style.position = 'fixed';
-button.style.bottom = '20px'; // Move the button to the bottom
-button.style.left = '50%'; // Center the button horizontally
-button.style.transform = 'translateX(-50%)'; // Adjust for centering
-button.style.padding = '15px 30px';
-button.style.fontSize = '18px';
-button.style.fontFamily = 'Arial, sans-serif';
-button.style.fontWeight = 'bold';
-button.style.backgroundColor = '#4e4eaf'; // Subtle neon blue
-button.style.border = 'none';
-button.style.borderRadius = '30px'; // Rounded corners
-button.style.color = '#fff';
+button.style.bottom = '30px';
+button.style.left = '50%';
+button.style.transform = 'translateX(-50%)';
+button.style.padding = '12px 28px';
+button.style.fontSize = '16px';
+button.style.fontFamily = 'Helvetica Neue, sans-serif';
+button.style.fontWeight = '500';
+button.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+button.style.color = '#ffffff';
+button.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+button.style.borderRadius = '8px';
+button.style.backdropFilter = 'blur(8px)';
 button.style.cursor = 'pointer';
-button.style.boxShadow = '0 0 15px rgba(0, 0, 255, 0.7)'; // Soft glowing effect
-button.style.transition = 'all 0.3s ease'; // Smooth transition for hover effect
+button.style.transition = 'all 0.3s ease';
+button.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
 
-// Hover effect to give it a more dynamic feel
+
 button.addEventListener('mouseover', () => {
-    button.style.backgroundColor = '#7a7aef'; // Lighter blue when hovered
-    button.style.transform = 'scale(1.1)'; // Slightly enlarge the button
-    button.style.boxShadow = '0 0 25px rgba(0, 0, 255, 1)'; // Stronger glowing effect
+    button.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+    button.style.transform = 'translateX(-50%) scale(1.05)';
+    button.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.3)';
 });
 
 button.addEventListener('mouseout', () => {
-    button.style.backgroundColor = '#4e4eaf'; // Back to original color
-    button.style.transform = 'scale(1)'; // Reset size
-    button.style.boxShadow = '0 0 15px rgba(0, 0, 255, 0.7)'; // Normal glow
+    button.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+    button.style.transform = 'translateX(-50%) scale(1)';
+    button.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
 });
+
 
 document.body.appendChild(button);
 
